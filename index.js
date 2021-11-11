@@ -20,13 +20,14 @@ async function run() {
     try {
         await client.connect();
         const database = client.db('shoeMart');
-        const servicesCollection = database.collection('products');
-        const bookingsCollection = database.collection('productDetails');
+        const productsCollection = database.collection('products');
+        const productDetailsCollection = database.collection('productDetails');
 
         //GET Products API
         app.get('/products', async(req, res) => {
             const cursor = productsCollection.find({});
-            const products = await cursor.toArray();
+            const size = parseInt(req.query.size);
+            const products = await cursor.limit(size).toArray();
             res.send(products);
         })
 
@@ -83,7 +84,7 @@ async function run() {
     }
 
     finally {
-        
+
         // await client.close();
     }
 }

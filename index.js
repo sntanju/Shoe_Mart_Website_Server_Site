@@ -86,7 +86,7 @@ async function run() {
             res.send(productDetails);
           });
 
-          //DELETE MyBooking API 
+          // DELETE MyBooking API 
         app.delete('/productDetails/:id', async (req, res) => {
             const id = req.params.id;
             const query = {_id:ObjectId(id)};
@@ -117,4 +117,4 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log('Shoe Mart is running on port', port);
-})
+});

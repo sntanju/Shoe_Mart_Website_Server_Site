@@ -22,6 +22,7 @@ async function run() {
         await client.connect();
         const database = client.db('shoeMart');
         const productsCollection = database.collection('products');
+        const reviewsCollection = database.collection('reviews');
         const productDetailsCollection = database.collection('productDetails');
 
         // GET Products API
@@ -38,6 +39,24 @@ async function run() {
             console.log('hit the post api', products);
 
             const result = await productsCollection.insertOne(products);
+            console.log(result);
+            res.json(result)
+        })
+
+        
+        // GET Reviews API
+        app.get('/reviews', async(req, res) => {
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        })
+
+        // POST Reviews API
+        app.post('/reviews', async (req, res) => {
+            const products = req.body;
+            console.log('hit the post api', reviews);
+
+            const result = await reviewsCollection.insertOne(reviews);
             console.log(result);
             res.json(result)
         })
@@ -60,28 +79,28 @@ async function run() {
             res.json(result)
         })
 
-        // // POST MyBooking API
-        // app.get("/productDetails/:email", async (req, res) => {
-        //     const cursor = productDetailsCollection.find({email: req.params.email});
-        //     const productDetails = await cursor.toArray();
-        //     res.send(productDetails);
-        //   });
+        // POST MyBooking API
+        app.get("/productDetails/:email", async (req, res) => {
+            const cursor = productDetailsCollection.find({email: req.params.email});
+            const productDetails = await cursor.toArray();
+            res.send(productDetails);
+          });
 
-        //   //DELETE MyBooking API 
-        // app.delete('/mybookings/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = {_id:ObjectId(id)};
-        //     const result = await bookingsCollection.deleteOne(query);
-        //     res.json(result);
-        // })
+          //DELETE MyBooking API 
+        app.delete('/productDetails/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await productDetailsCollection.deleteOne(query);
+            res.json(result);
+        })
 
-        //DELETE productDetails API 
-        // app.delete('/productDetails/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = {_id:ObjectId(id)};
-        //     const result = await productDetailsCollection.deleteOne(query);
-        //     res.json(result);
-        // })
+        // DELETE productDetails API 
+        app.delete('/productDetails/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await productDetailsCollection.deleteOne(query);
+            res.json(result);
+        })
     }
 
     finally {

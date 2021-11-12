@@ -23,7 +23,7 @@ async function run() {
         const database = client.db('shoeMart');
         const productsCollection = database.collection('products');
         const reviewsCollection = database.collection('reviews');
-        const productDetailsCollection = database.collection('productDetails');
+        const allOrdersCollection = database.collection('allOrders');
 
         // GET Products API
         app.get('/products', async(req, res) => {
@@ -44,15 +44,14 @@ async function run() {
         })
 
         
-        // GET reviews API
+        // GET Reviews API
         app.get('/reviews', async(req, res) => {
             const cursor = reviewsCollection.find({});
-            const size = parseInt(req.query.size);
             const reviews = await cursor.toArray();
             res.send(reviews);
         })
 
-        // POST Products API
+        // POST Reviews API
         app.post('/reviews', async (req, res) => {
             const reviews = req.body;
             console.log('hit the post api',reviews);
@@ -63,21 +62,29 @@ async function run() {
         })
 
         
-        // GET productDetails API
-        app.get('/productDetails', async(req, res) => {
-            const cursor = productDetailsCollection.find({});
-            const productDetails = await cursor.toArray();
-            res.send(productDetails);
+        // GET allOrders API
+        app.get('/allOrders', async(req, res) => {
+            const cursor = allOrdersCollection.find({});
+            const allOrders = await cursor.toArray();
+            res.send(allOrders);
         })
 
-        // POST productDetails API
-        app.post('/productDetails', async (req, res) => {
-            const productDetails = req.body;
-            console.log('hit the post api', productDetails);
+        // POST allOrders API
+        app.post('/allOrders', async (req, res) => {
+            const allOrders = req.body;
+            console.log('hit the post api', allOrders);
 
-            const result = await productDetailsCollection.insertOne(productDetails);
+            const result = await allOrdersCollection.insertOne(allOrders);
             console.log(result);
             res.json(result)
+        })
+
+        // DELETE allOrders API 
+        app.delete('/allOrders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await allOrdersCollection.deleteOne(query);
+            res.json(result);
         })
 
         // POST MyBooking API
@@ -95,13 +102,6 @@ async function run() {
             res.json(result);
         })
 
-        // DELETE productDetails API 
-        app.delete('/productDetails/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = {_id:ObjectId(id)};
-            const result = await productDetailsCollection.deleteOne(query);
-            res.json(result);
-        })
     }
 
     finally {

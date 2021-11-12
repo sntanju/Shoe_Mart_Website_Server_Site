@@ -24,6 +24,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const reviewsCollection = database.collection('reviews');
         const allOrdersCollection = database.collection('allOrders');
+         const usersCollection = database.collection('users');
 
         // GET Products API
         app.get('/products', async(req, res) => {
@@ -86,6 +87,33 @@ async function run() {
             const result = await allOrdersCollection.deleteOne(query);
             res.json(result);
         })
+
+         app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
 
         // POST MyBooking API
         app.get("/productDetails/:email", async (req, res) => {

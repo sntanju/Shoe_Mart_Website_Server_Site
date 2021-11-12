@@ -24,7 +24,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const reviewsCollection = database.collection('reviews');
         const allOrdersCollection = database.collection('allOrders');
-         const usersCollection = database.collection('users');
+        const usersCollection = database.collection('users');
 
         // GET Products API
         app.get('/products', async(req, res) => {
@@ -37,8 +37,6 @@ async function run() {
         // POST Products API
         app.post('/products', async (req, res) => {
             const products = req.body;
-            console.log('hit the post api', products);
-
             const result = await productsCollection.insertOne(products);
             console.log(result);
             res.json(result)
@@ -55,10 +53,7 @@ async function run() {
         // POST Reviews API
         app.post('/reviews', async (req, res) => {
             const reviews = req.body;
-            console.log('hit the post api',reviews);
-
             const result = await reviewsCollection.insertOne(reviews);
-            console.log(result);
             res.json(result)
         })
 
@@ -73,10 +68,7 @@ async function run() {
         // POST allOrders API
         app.post('/allOrders', async (req, res) => {
             const allOrders = req.body;
-            console.log('hit the post api', allOrders);
-
             const result = await allOrdersCollection.insertOne(allOrders);
-            console.log(result);
             res.json(result)
         })
 
@@ -88,8 +80,7 @@ async function run() {
             res.json(result);
         })
 
-
-        // Users APi
+        // GET Users API
          app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -101,6 +92,8 @@ async function run() {
             res.json({ admin: isAdmin });
         })
 
+        // POST Users API
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
@@ -108,6 +101,7 @@ async function run() {
             res.json(result);
         });
 
+        // PUT Users API
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -116,29 +110,14 @@ async function run() {
             res.json(result);
         });
 
-        app.put('/users', async (req, res) => {
-            const user = req.body;
-            const filter = { email: user.email };
-            const options = { upsert: true };
-            const updateDoc = { $set: user };
-            const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.json(result);
-        });
-
-        // POST MyBooking API
-        app.get("/productDetails/:email", async (req, res) => {
-            const cursor = productDetailsCollection.find({email: req.params.email});
-            const productDetails = await cursor.toArray();
-            res.send(productDetails);
-          });
-
-          // DELETE MyBooking API 
-        app.delete('/productDetails/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = {_id:ObjectId(id)};
-            const result = await productDetailsCollection.deleteOne(query);
-            res.json(result);
-        })
+        // app.put('/users', async (req, res) => {
+        //     const user = req.body;
+        //     const filter = { email: user.email };
+        //     const options = { upsert: true };
+        //     const updateDoc = { $set: user };
+        //     const result = await usersCollection.updateOne(filter, updateDoc, options);
+        //     res.json(result);
+        // });
 
     }
 

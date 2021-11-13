@@ -41,6 +41,14 @@ async function run() {
             console.log(result);
             res.json(result)
         })
+
+        // DELETE Products API 
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
+        })
       
         // GET Reviews API
         app.get('/reviews', async(req, res) => {
@@ -79,7 +87,7 @@ async function run() {
             res.json(result);
         })
 
-        // GET allOrders API
+        // GET myOrder API
         app.get('/allOrders/:email', async(req, res) => {
             const email = req.query.email;
             const query = { email: email}
@@ -102,7 +110,6 @@ async function run() {
         })
 
         // POST Users API
-
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
@@ -117,9 +124,7 @@ async function run() {
             const updateDoc = { $set: { role: 'admin'} };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-        });
-
-    
+        }); 
     }
 
     finally {

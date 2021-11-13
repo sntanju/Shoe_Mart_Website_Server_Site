@@ -41,8 +41,7 @@ async function run() {
             console.log(result);
             res.json(result)
         })
-
-        
+      
         // GET Reviews API
         app.get('/reviews', async(req, res) => {
             const cursor = reviewsCollection.find({});

@@ -79,6 +79,16 @@ async function run() {
             res.json(result);
         })
 
+        // GET allOrders API
+        app.get('/allOrders/:email', async(req, res) => {
+            const email = req.query.email;
+            const query = { email: email}
+            const cursor = allOrdersCollection.find(query);
+            const allOrders = await cursor.toArray();
+            res.send(allOrders);
+        })
+        
+
         // GET Users API
          app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -109,15 +119,7 @@ async function run() {
             res.json(result);
         });
 
-        // app.put('/users', async (req, res) => {
-        //     const user = req.body;
-        //     const filter = { email: user.email };
-        //     const options = { upsert: true };
-        //     const updateDoc = { $set: user };
-        //     const result = await usersCollection.updateOne(filter, updateDoc, options);
-        //     res.json(result);
-        // });
-
+    
     }
 
     finally {
